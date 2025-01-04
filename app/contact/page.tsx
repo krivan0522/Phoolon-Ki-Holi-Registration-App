@@ -33,7 +33,7 @@ export default function Contact() {
         {teamMembers.map((member, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center"
+            className="bg-white rounded-lg col-span-3 lg:col-span-1 shadow-lg p-6 flex flex-col items-center text-center w-full"
           >
             <h2 className="text-2xl font-semibold">{member.name}</h2>
             <p className="text-gray-500">{member.role}</p>

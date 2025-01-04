@@ -3,18 +3,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/providers/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
     const { isLoggedIn, setIsLoggedIn } = useAuth();
     const pathname = usePathname();
+    const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
     const [menuOpen, setMenuOpen] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem("authToken");
         setIsLoggedIn(false);
     };
-
+    useEffect(() => {
+        setIsLogin(pathname === "/login");
+    }, [pathname]);
     const getLinkClasses = (path: string): string =>
         pathname === path
             ? "text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-lg px-4 py-2"
@@ -40,7 +43,7 @@ const Navbar = () => {
                 {/* Mobile Menu Button */}
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="inline-flex items-center p-2 w-10 h-10 justify-center text-white rounded-lg md:hidden hover:bg-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-300"
+                    className="inline-flex items-center p-2 w-10 h-10 justify-center text-white rounded-lg lg:hidden hover:bg-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-300"
                     aria-controls="navbar-default"
                     aria-expanded={menuOpen}
                 >
@@ -70,8 +73,8 @@ const Navbar = () => {
                 </button>
 
                 {/* Desktop Navigation Links */}
-                <div className={`w-full md:flex md:items-center md:w-auto ${menuOpen ? "block" : "hidden"}`}>
-                    <ul className="flex flex-col items-center font-medium mt-4 md:flex-row md:space-x-6 md:mt-0" onClick={() => setMenuOpen(!menuOpen)}>
+                <div className={`w-full lg:flex lg:items-center lg:w-auto ${menuOpen ? "block" : "hidden"}`}>
+                    <ul className="flex flex-col items-center font-medium mt-4 lg:flex-row lg:space-x-6 lg:mt-0" onClick={() => setMenuOpen(!menuOpen)}>
                         <li className="my-2">
                             <Link href="/" className={getLinkClasses("/")} >
                                 Home
@@ -97,7 +100,14 @@ const Navbar = () => {
                                 Contact
                             </Link>
                         </li>
-                        {!isLoggedIn ? (
+                        {isLogin ? (
+                            <li className="my-2">
+                                <Link href="/signup" className={getLinkClasses("/signup")}>
+                                    Signup
+                                </Link>
+                            </li>
+                        ) :
+                        !isLoggedIn ? (
                             <li className="my-2">
                                 <Link href="/login" className={getLinkClasses("/login")}>
                                     Login

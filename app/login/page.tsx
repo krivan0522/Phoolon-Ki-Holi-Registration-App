@@ -9,6 +9,7 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { setIsLoggedIn } = useAuth();
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,9 +26,17 @@ export default function Login() {
             } else {
                 alert(result.error || 'Invalid credentials.');
             }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('An error occurred. Please try again.');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    setError('Invalid email or password.');
+                } else if (error.response.status === 400) {
+                    setError('All fields are required.');
+                } else {
+                    setError('An error occurred. Please try again.');
+                }
+            }
         } finally {
             setLoading(false); // End loading state
         }
@@ -37,8 +46,9 @@ export default function Login() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-200 to-orange-100 p-6">
             <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
                 <h1 className="text-4xl font-extrabold text-center mb-6 text-pink-600">Log In</h1>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {error && <div className="text-red-600 text-center">{error}</div>}
                     <div>
                         <label htmlFor="email" className="block text-left font-medium text-gray-700">Email</label>
                         <input

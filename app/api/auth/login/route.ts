@@ -25,7 +25,6 @@ export async function POST(request: Request) {
 
     // Generate a token
     const token = generateToken(user.id);
-    console.log('token', token)
     return NextResponse.json({ success: true, token });
   } catch (error) {
     console.error('Error during login:', error);

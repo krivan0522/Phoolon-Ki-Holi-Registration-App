@@ -1,5 +1,7 @@
 'use client';
 
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Signup() {
@@ -7,6 +9,8 @@ export default function Signup() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [pwdMatch, setPwdMatch] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,24 +21,26 @@ export default function Signup() {
 
         setLoading(true);
         try {
-            const response = await fetch('/api/auth/signup', {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: { 'Content-Type': 'application/json' },
-            });
+            const response = await axios.post('/api/auth/signup', formData);
+            const result = response.data;
 
-            const result = await response.json();
             if (result.success) {
-                alert('Signup successful!');
                 setFormData({ name: '', email: '', mobile: '', password: '' });
                 setConfirmPassword('');
                 setPwdMatch(true);
+                router.push('/login');
             } else {
                 alert(result.error || 'Something went wrong.');
             }
-        } catch (error) {
-            console.error('Signup error:', error);
-            alert('An error occurred. Please try again.');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            if (error.response) {
+                if (error.response.status === 400) {
+                    setError("Email or mobile number already in use.");
+                } else {
+                    setError("An error occurred. Please try again.");
+                }
+            }
         } finally {
             setLoading(false);
         }
@@ -44,8 +50,8 @@ export default function Signup() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 to-orange-100 p-6">
             <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
                 <h1 className="text-4xl font-extrabold text-center mb-6 text-pink-600">Sign Up</h1>
-
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {error && <div className="text-red-600 text-center">{error}</div>}
                     {/* Name Field */}
                     <div>
                         <label htmlFor="name" className="block font-medium text-gray-700">Name</label>
