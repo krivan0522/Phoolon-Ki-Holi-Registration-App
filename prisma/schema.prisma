@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String         @unique
+  mobile        String         @unique
+  password      String
+  isRegistered  Boolean        @default(false)
+  registrations Registration[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Registration {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  name            String
+  address         String
+  idolDescription String
+  idolSize        String
+  token           Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relationship to User
+  user User @relation(fields: [userId], references: [id])
+
+  // Add a unique constraint to ensure a user can't register multiple times
+  @@unique([userId])
+}
+
+model Donation {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  amount        Int
+  contact       String
+  screenshotUrl String
+}
