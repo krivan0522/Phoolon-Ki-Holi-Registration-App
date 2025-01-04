@@ -38,9 +38,10 @@ model Registration {
 }
 
 model Donation {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   amount        Int
   contact       String
   screenshotUrl String
+  createdAt     DateTime @default(now())
 }

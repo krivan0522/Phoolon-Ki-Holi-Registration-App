@@ -1,15 +1,26 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import prisma from '../../lib/prisma';
 
-export default async function handler(req:NextApiRequest, res:NextApiResponse) {
-  if (req.method === 'GET') {
-    try {
-      const registrations = await prisma.registration.findMany();
-      res.status(200).json({ success: true, registrations });
-    } catch {
-      res.status(500).json({ success: false, message: 'Error fetching registrations.' });
-    }
-  } else {
-    res.status(405).json({ message: 'Method not allowed.' });
+export async function GET(req: Request) {
+  try {
+    const registrations = await prisma.registration.findMany({
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+            mobile: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return NextResponse.json({ registrations });
+  } catch (error) {
+    console.error('Error fetching registrations:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -1,16 +1,20 @@
+import { NextResponse } from 'next/server';
 import prisma from '../../lib/prisma';
 
-import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    try {
-      const donations = await prisma.donation.findMany();
-      res.status(200).json({ success: true, donations });
-    } catch { 
-      res.status(500).json({ success: false, message: 'Error fetching donations.' });
-    }
-  } else {
-    res.status(405).json({ message: 'Method not allowed.' });
+export async function GET(req: Request) {
+  try {
+    const donations = await prisma.donation.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return NextResponse.json({ donations });
+
+  } catch(error) {
+    console.error('Error fetching donations:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
