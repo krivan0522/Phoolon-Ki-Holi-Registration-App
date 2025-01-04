@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../lib/prisma';
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
+    
     const registrations = await prisma.registration.findMany({
       include: {
         user: {
@@ -17,6 +18,11 @@ export async function GET(req: Request) {
         createdAt: 'desc',
       },
     });
+
+    //if no registrations found
+    if (registrations.length==0) {
+      return NextResponse.json({ message: 'No registrations found' });
+    }
 
     return NextResponse.json({ registrations });
   } catch (error) {

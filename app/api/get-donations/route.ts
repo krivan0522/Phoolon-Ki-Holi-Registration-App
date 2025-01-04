@@ -2,13 +2,18 @@ import { NextResponse } from 'next/server';
 import prisma from '../../lib/prisma';
 
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const donations = await prisma.donation.findMany({
       orderBy: {
         createdAt: 'desc',
       },
     });
+
+    //if no donations found
+    if (donations.length==0) {
+      return NextResponse.json({ message: 'No donations found' });
+    }
 
     return NextResponse.json({ donations });
 
