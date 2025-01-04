@@ -3,7 +3,8 @@
 import { useAuth } from '@/providers/AuthContext';
 import { useRegistration } from '@/providers/RegistrationContext';
 import axios from 'axios';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Registration() {
   const [formData, setFormData] = useState({
@@ -12,13 +13,23 @@ export default function Registration() {
     idolDescription: '',
     idolSize: '',
   });
+  
+  const [loading, setLoading] = useState(false);
   const { isRegistered, token, checkRegistration } = useRegistration();
   const { isLoggedIn } = useAuth();
-
+  
+  useEffect(() => {
+    if (isLoggedIn) {
+      checkRegistration();
+    }
+  }, [isLoggedIn, checkRegistration]);
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
+
+  const isFormComplete = Object.values(formData).every((field) => field.trim() !== '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +37,8 @@ export default function Registration() {
       alert('Please log in first.');
       return;
     }
+
+    setLoading(true); // Start loading state
 
     try {
       const tkn = localStorage.getItem('authToken');
@@ -49,78 +62,114 @@ export default function Registration() {
     } catch (error) {
       console.error('Error:', error);
       alert('An error occurred. Please try again.');
+    } finally {
+      setLoading(false); // End loading state
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">Ladoo Gopal Registration</h1>
-      {isRegistered ? (
-        <div>
-          <h2 className="text-xl font-semibold">You are already registered!</h2>
-          <p className="text-gray-600">Your registration token is: {token}</p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="mb-4">
-            <label htmlFor="name" className="block font-medium">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-200 to-purple-300 p-6">
+      <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-8">
+        <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">
+          Ladoo Gopal Registration
+        </h1>
+        {!isLoggedIn && (
+          <p className="text-center text-red-500 mb-4">
+            Please <Link href={'/login'} className='text-blue-500 hover:text-red-950 underline'>log in</Link> to register your idol.
+          </p>
+        )}
+        {isLoggedIn && isRegistered ? (
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold text-green-600">
+              You are already registered!
+            </h2>
+            <p className="text-lg mt-2">
+              Your registration token is: 
+              <span className="font-bold text-indigo-700"> {token}</span>
+            </p>
           </div>
-          <div className="mb-4">
-            <label htmlFor="address" className="block font-medium">
-              Address
-            </label>
-            <textarea
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            ></textarea>
-          </div>
-          <div className="mb-4">
-            <label htmlFor="idolDescription" className="block font-medium">
-              Idol Description
-            </label>
-            <textarea
-              id="idolDescription"
-              name="idolDescription"
-              value={formData.idolDescription}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            ></textarea>
-          </div>
-          <div className="mb-4">
-            <label htmlFor="idolSize" className="block font-medium">
-              Idol Size
-            </label>
-            <input
-              type="text"
-              id="idolSize"
-              name="idolSize"
-              value={formData.idolSize}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <button type="submit" className="w-full p-2 text-white rounded bg-blue-500">
-            Register
-          </button>
-        </form>
-      )}
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col">
+                <label htmlFor="name" className="font-medium mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:cursor-not-allowed"
+                  disabled={!isLoggedIn || loading}
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="idolSize" className="font-medium mb-1">
+                  Idol Size
+                </label>
+                <input
+                  type="text"
+                  id="idolSize"
+                  name="idolSize"
+                  value={formData.idolSize}
+                  onChange={handleChange}
+                  required
+                  className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:cursor-not-allowed"
+                  disabled={!isLoggedIn || loading}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="address" className="font-medium mb-1">
+                Address
+              </label>
+              <textarea
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+                rows={4}
+                className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:cursor-not-allowed"
+                disabled={!isLoggedIn || loading}
+              ></textarea>
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="idolDescription" className="font-medium mb-1">
+                Idol Description
+              </label>
+              <textarea
+                id="idolDescription"
+                name="idolDescription"
+                value={formData.idolDescription}
+                onChange={handleChange}
+                required
+                rows={3}
+                className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:cursor-not-allowed"
+                disabled={!isLoggedIn || loading}
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              className={`w-full p-3 text-white rounded-lg transition disabled:bg-indigo-400 disabled:cursor-not-allowed ${
+                loading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-indigo-600 hover:bg-indigo-700'
+              }`}
+              disabled={!isFormComplete || loading}
+            >
+              {loading ? 'Registering...' : 'Register'}
+            </button>
+          </form>
+        )}
+      </div>
     </div>
   );
 }
