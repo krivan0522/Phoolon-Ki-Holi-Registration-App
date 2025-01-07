@@ -73,6 +73,23 @@ export default function Registration() {
         <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">
           Ladoo Gopal Registration
         </h1>
+        {!isRegistered ?( <div>
+          {/* Registration Instructions in English*/}
+          <h2 className={`text-lg text-black`}>How to register your idol?</h2>
+          <ol className='list-decimal  ml-4 mb-4'>
+            <li className="text-sm text-black">Create your account <Link href={'/signup'} className='underline text-blue-900'>here.</Link> </li>
+            <li className="text-sm text-black">Log in to your account <Link href={'/login'} className='underline text-blue-900'>here.</Link>.</li>
+            <li className="text-sm text-black">Fill in the registration form below and submit.</li>
+            <li className="text-sm text-black">You will receive a registration token after successful registration.</li>
+          </ol>
+          <h2 className={`text-lg text-black`}>कैसे पंजीकरण करें?</h2>
+          <ol className='list-decimal  ml-4 mb-4'>
+            <li className="text-sm text-black">यहाँ पर अपना खाता <Link href={'/signup'} className='underline text-blue-900'>बनाएं।</Link> </li>
+            <li className="text-sm text-black">अपने खाते में लॉग इन <Link href={'/login'} className='underline text-blue-900'>करें।</Link> </li>
+            <li className="text-sm text-black">नीचे दिए गए पंजीकरण फॉर्म में जानकारी भरें और सबमिट करें।</li>
+            <li className="text-sm text-black">सफल पंजीकरण के बाद आपको एक पंजीकरण टोकन प्राप्त होगा।</li>
+          </ol>
+        </div>):("")}
         {!isLoggedIn && (
           <p className="text-center text-red-500 mb-4">
             Please <Link href={'/login'} className='text-blue-500 hover:text-red-950 underline'>log in</Link> to register your idol.
@@ -109,24 +126,27 @@ export default function Registration() {
 
               <div className="flex flex-col">
                 <label htmlFor="idolSize" className="font-medium mb-1">
-                  Idol Size
+                  Ladoo Gopal Size
                 </label>
-                <input
-                  type="text"
+                <select
                   id="idolSize"
                   name="idolSize"
                   value={formData.idolSize}
-                  onChange={handleChange}
                   required
                   className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:cursor-not-allowed"
                   disabled={!isLoggedIn || loading}
-                />
+                >
+                  <option value="">Select Size</option>
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+                </select>
               </div>
             </div>
 
             <div className="flex flex-col">
               <label htmlFor="address" className="font-medium mb-1">
-                Address
+                Your Address
               </label>
               <textarea
                 id="address"
@@ -142,7 +162,7 @@ export default function Registration() {
 
             <div className="flex flex-col">
               <label htmlFor="idolDescription" className="font-medium mb-1">
-                Idol Description
+                Ladoo Gopal Description
               </label>
               <textarea
                 id="idolDescription"

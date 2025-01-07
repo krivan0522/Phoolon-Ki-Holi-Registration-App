@@ -2,6 +2,7 @@ import './globals.css'
 import Navbar from './components/Navbar'
 import { AuthProvider } from '@/providers/AuthContext'
 import { RegistrationProvider } from '@/providers/RegistrationContext'
+import DonateBtn from './components/DonateBtn'
 
 
 export const metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
           <Navbar />
           <main className="container mx-auto">
               {children}
+              <DonateBtn />
           </main>
           </RegistrationProvider>
         </AuthProvider>

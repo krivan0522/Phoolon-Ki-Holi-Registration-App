@@ -9,14 +9,12 @@ export default function Contact() {
       phone: "9331844389",
     },
     {
-      name: "Krish Agarwal",
-      role: "Donations Manager",
-      phone: "9988776655",
+      name: "Sunil Singhi",
+      phone: "9830577308",
     },
     {
-      name: "Chirag Garg",
-      role: "Logistics Head",
-      phone: "9123456789",
+      name: "Govind Chokhani",
+      phone: "9123356428",
     },
   ];
 
@@ -26,7 +24,7 @@ export default function Contact() {
       <h1 className="text-4xl font-bold text-center text-indigo-700 mb-8">Contact Us</h1>
 
       {/* Team Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
         <h2 className="text-3xl text-violet-900 font-bold text-center col-span-3">
           Our Team
         </h2>
@@ -36,7 +34,7 @@ export default function Contact() {
             className="bg-white rounded-lg col-span-3 lg:col-span-1 shadow-lg p-6 flex flex-col items-center text-center w-full"
           >
             <h2 className="text-2xl font-semibold">{member.name}</h2>
-            <p className="text-gray-500">{member.role}</p>
+            {/* <p className="text-gray-500">{member.role}</p> */}
             <p className="mt-2">📞 +91 {member.phone}</p>
             <Link
               href={`https://api.whatsapp.com/send/?phone=${member.phone}&amp;text&amp;type=phone_number&amp;app`}
@@ -83,6 +81,17 @@ export default function Contact() {
             you as soon as possible.
           </p>
           <div className="text-center space-y-4">
+            <div>
+              <strong>Name:</strong>{" "}
+              <Link
+                href="https://www.linkedin.com/in/krish-agarwal-0a09ab23a/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-800"
+              >
+                Krish Agarwal
+              </Link>
+            </div>
             <div>
               <strong>Email:</strong>{" "}
               <Link

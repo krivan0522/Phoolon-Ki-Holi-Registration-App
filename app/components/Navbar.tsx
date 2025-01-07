@@ -29,11 +29,11 @@ const Navbar = () => {
 
                 <Link href="/" className="flex items-center space-x-3">
                     <Image
-                        src="/rkt-logo.png"
+                        src="/rkt-logo.webp"
                         alt="Logo"
                         width={40}
                         height={40}
-                        className="h-10"
+                        className="rounded-full"
                     />
                     <span className="text-white text-2xl font-extrabold">
                         Phoolon Ki Holi

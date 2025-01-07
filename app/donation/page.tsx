@@ -64,10 +64,29 @@ export default function Donation() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 to-yellow-300 p-6">
       <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-8">
-        <h1 className="text-4xl font-extrabold text-center text-pink-600 mb-8">
+        <h1 className="text-4xl font-extrabold text-center text-pink-600 mb-1">
           Donate to Phoolon ki Holi
         </h1>
-
+        <p className='text-xl text-gray-700 mb-8 text-center'>
+          Aapki udarta, Krishna ke ashirwad ka madhur svaroop hai !
+        </p>
+        <div>
+          <h2>How to Donate?</h2>
+          <ol className='list-decimal list-inside mb-4'>
+            <li>Scan the QR code below to donate any amount you wish.</li>
+            <li>Enter your details in the form below.</li>
+            <li>Upload the payment screenshot from the UPI app.</li>
+            <li>Click on the Submit Donation button.</li>
+          </ol>
+          {/* in hindi */}
+          <h2>कैसे दान करें?</h2>
+          <ol className='list-decimal list-inside mb-4'>
+            <li>नीचे दिए गए QR कोड को स्कैन करें और जितनी राशि आप चाहें दान करें।</li>
+            <li>नीचे दिए गए फॉर्म में अपना विवरण दर्ज करें।</li>
+            <li>यूपीआई ऐप से भुगतान स्क्रीनशॉट अपलोड करें।</li>
+            <li>दान सबमिट बटन पर क्लिक करें।</li>
+          </ol>
+        </div>
         <div className="mb-10">
           <h2 className="text-2xl text-center font-semibold mb-4 text-gray-700">
             Scan QR Code to Donate
