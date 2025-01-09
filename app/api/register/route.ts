@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '../../lib/prisma';
 import { verifyToken } from '../../lib/jwt';
 
+const MAX_REGISTRATIONS = 300;
 export async function POST(request: Request) {
   try {
 
@@ -27,6 +28,15 @@ export async function POST(request: Request) {
     console.log('Existing registration:', existingRegistration);
     if (existingRegistration) {
       return NextResponse.json({ error: 'User has already registered.' }, { status: 400 });
+    }
+
+    const registrationCount = await prisma.registration.count();
+
+    if (registrationCount >= MAX_REGISTRATIONS) {
+      return NextResponse.json(
+        { error: 'Registration limit reached. No more registrations allowed.' },
+        { status: 403 }
+      );
     }
 
     // Parse and log the incoming request
