@@ -10,19 +10,16 @@ export async function POST(request: Request) {
     if (!email || !password) {
       return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
     }
-
     // Find the user
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
     }
-
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
     }
-
     // Generate a token
     const token = generateToken(user.id);
     return NextResponse.json({ success: true, token });

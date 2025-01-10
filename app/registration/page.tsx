@@ -135,11 +135,16 @@ export default function Registration() {
                   required
                   className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:cursor-not-allowed"
                   disabled={!isLoggedIn || loading}
+                  onChange={e => { 
+                    setFormData((prevState) => ({ ...prevState, idolSize: e.target.value }));
+                  }}
                 >
                   <option value="">Select Size</option>
-                  <option value="small">Small</option>
-                  <option value="medium">Medium</option>
-                  <option value="large">Large</option>
+                  {Array.from({ length: 15 }, (_, i) => (
+                    <option key={i} value={`${i + 1}`}>
+                      {i + 1}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
