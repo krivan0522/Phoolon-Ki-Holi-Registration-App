@@ -8,6 +8,11 @@ import DonateBtn from './components/DonateBtn'
 export const metadata = {
   title: 'Phoolon ki Holi',
   description: 'Annual Phoolon ki Holi event in our locality',
+  icons: {
+    icon: '/public/favicon.ico',
+    appleIcon: '/public/apple-touch-icon.png',
+    shortcut: '/public/favicon-16x16.png'
+  }
 }
 
 export default function RootLayout({

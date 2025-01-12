@@ -6,18 +6,32 @@ export async function POST(request: Request) {
   try {
     const { name, email, mobile, password } = await request.json();
 
-    if (!name || !email || !mobile || !password) {
+    if (!name || !mobile || !password) {
       return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
     }
 
-    // Check if email or mobile already exists
-    const existingUser = await prisma.user.findFirst({
-      where: {
-        OR: [{ email }, { mobile }],
-      },
+    // Check if email already exists
+    if (email) {
+      const emailInUse = await prisma.user.findUnique({
+        where: { email },
+      });
+      if (emailInUse) {
+        return NextResponse.json(
+          { error: 'Email is already in use.' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Check if mobile already exists
+    const mobileInUse = await prisma.user.findUnique({
+      where: { mobile },
     });
-    if (existingUser) {
-      return NextResponse.json({ error: 'Email or mobile number already in use.' }, { status: 400 });
+    if (mobileInUse) {
+      return NextResponse.json(
+        { error: 'Mobile number is already in use.' },
+        { status: 400 }
+      );
     }
 
     // Hash the password

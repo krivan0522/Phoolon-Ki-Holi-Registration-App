@@ -5,20 +5,29 @@ import { generateToken } from '../../../lib/jwt';
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { identifier, password } = await request.json();
 
-    if (!email || !password) {
+    if (!identifier || !password) {
       return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
     }
-    // Find the user
-    const user = await prisma.user.findUnique({ where: { email } });
+
+    // Check if the identifier is an email or mobile number
+    const isEmail = identifier.includes('@');
+
+    // Find user by email or mobile
+    const user = await prisma.user.findUnique({
+      where: isEmail
+        ? { email: identifier }
+        : { mobile: identifier },
+    });
+
     if (!user) {
-      return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
+      return NextResponse.json({ error: 'User not found' }, { status: 401 });
     }
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
+      return NextResponse.json({ error: 'Incorrect password.' }, { status: 401 });
     }
     // Generate a token
     const token = generateToken(user.id);

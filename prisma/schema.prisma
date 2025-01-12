@@ -10,7 +10,7 @@ datasource db {
 model User {
   id            String         @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  email         String         @unique
+  email         String?         @unique
   mobile        String         @unique
   password      String
   isRegistered  Boolean        @default(false)
@@ -26,7 +26,7 @@ model Registration {
   address         String
   idolDescription String
   idolSize        String
-  token           Int
+  token           String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -44,4 +44,12 @@ model Donation {
   contact       String
   screenshotUrl String
   createdAt     DateTime @default(now())
+}
+
+model RegistrationControl {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  maxRegistrations   Int
+  currentRegistrations Int    @default(0) // Defaults to 0
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }

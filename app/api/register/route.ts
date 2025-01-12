@@ -2,64 +2,69 @@ import { NextResponse } from 'next/server';
 import prisma from '../../lib/prisma';
 import { verifyToken } from '../../lib/jwt';
 
-const MAX_REGISTRATIONS = 300;
 export async function POST(request: Request) {
   try {
-
     const authorization = request.headers.get('Authorization');
-    const token = authorization?.split(' ')[1]; 
+    const token = authorization?.split(' ')[1];
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized. Please Login' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized. Please login.' }, { status: 401 });
     }
-
+    
     const payload = verifyToken(token);
     if (!payload) {
-      return NextResponse.json({ error: 'Unauthorized. Logout and Log in again. ' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized. Logout and log in again.' }, { status: 401 });
     }
 
     const userId = payload.userId;
 
+    // Check if the user is already registered
     const existingRegistration = await prisma.registration.findUnique({
       select: { id: true },
-      where: {
-        userId: userId
-       },
-    })
-    console.log('Existing registration:', existingRegistration);
+      where: { userId },
+    });
+
     if (existingRegistration) {
       return NextResponse.json({ error: 'User has already registered.' }, { status: 400 });
     }
 
-    const registrationCount = await prisma.registration.count();
+    // Fetch the registration control limits
+    const registrationControl = await prisma.registrationControl.findFirst({
+      orderBy: { id: 'desc' }, // Fetch the most recent control record
+    });
 
-    if (registrationCount >= MAX_REGISTRATIONS) {
+    if (!registrationControl) {
+      return NextResponse.json(
+        { error: 'Registration is currently closed. Please try again later.' },
+        { status: 403 }
+      );
+    }
+
+    const { maxRegistrations, currentRegistrations } = registrationControl;
+
+    if (currentRegistrations >= maxRegistrations) {
       return NextResponse.json(
         { error: 'Registration limit reached. No more registrations allowed.' },
         { status: 403 }
       );
     }
 
-    // Parse and log the incoming request
+    // Parse and validate the incoming request
     const body = await request.json();
-    
+
     if (!body) {
-      console.error('Request body is null or undefined');
-      return NextResponse.json({ error: 'Request body is missing' }, { status: 400 });
+      return NextResponse.json({ error: 'Request body is missing.' }, { status: 400 });
     }
-    
+
     const { name, address, idolDescription, idolSize } = body;
-    
-    // Validate required fields
+
     if (!name || !address || !idolDescription || !idolSize) {
-      console.error('Missing fields in the request body:', body);
       return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
     }
-    
-    // Get the highest token number from the existing registrations
+
+    // Generate a unique token (PH0001, PH0002, ...)
     const lastRegistration = await prisma.registration.count();
-    console.log('Received body:', lastRegistration);
-    const newToken = lastRegistration ? lastRegistration + 1 : 1;
-    console.log('New token:', newToken);
+    const newToken = `PH${(lastRegistration + 1).toString().padStart(4, '0')}`;
+
     // Create the registration
     const registration = await prisma.registration.create({
       data: {
@@ -72,6 +77,12 @@ export async function POST(request: Request) {
       },
     });
 
+    // Increment the current registrations count in RegistrationControl
+    await prisma.registrationControl.update({
+      where: { id: registrationControl.id },
+      data: { currentRegistrations: { increment: 1 } },
+    });
+
     // Update the user to set isRegistered to true
     await prisma.user.update({
       where: { id: userId },
@@ -79,7 +90,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({
-      message: 'Registration successful',
+      message: 'Registration successful.',
       success: true,
       registration,
     });

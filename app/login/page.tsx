@@ -3,92 +3,123 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/AuthContext';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+// Validation schema
+const loginSchema = z.object({
+  identifier: z
+    .string()
+    .nonempty('Email or Mobile Number is required.')
+    .refine(
+      (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{10}$/.test(value),
+      { message: 'Must be a valid email or 10-digit mobile number.' }
+    ),
+  password: z.string().min(6, 'Password must be at least 6 characters long.'),
+});
+
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
-    const [formData, setFormData] = useState({ email: '', password: '' });
-    const [loading, setLoading] = useState(false);
-    const router = useRouter();
-    const { setIsLoggedIn } = useAuth();
-    const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { setIsLoggedIn } = useAuth();
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+  });
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true); // Start loading state
+  const onSubmit = async (data: LoginForm) => {
+    setLoading(true);
+    try {
+      const response = await axios.post('/api/auth/login', data);
+      const result = response.data;
 
-        try {
-            const response = await axios.post('/api/auth/login', formData);
-            const result = response.data;
-
-            if (result.success) {
-                localStorage.setItem('authToken', result.token); // Store token
-                setIsLoggedIn(true);
-                router.push('/registration'); // Redirect to registration
-            } else {
-                alert(result.error || 'Invalid credentials.');
-            }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            if (error.response) {
-                if (error.response.status === 401) {
-                    setError('Invalid email or password.');
-                } else if (error.response.status === 400) {
-                    setError('All fields are required.');
-                } else {
-                    setError('An error occurred. Please try again.');
-                }
-            }
-        } finally {
-            setLoading(false); // End loading state
+      if (result.success) {
+        localStorage.setItem('authToken', result.token); // Save token
+        setIsLoggedIn(true);
+        router.push('/registration'); // Redirect to registration
+      } else {
+        alert(result.error || 'Invalid credentials.');
+      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          alert('Invalid email or password.');
+        } else if (error.response.status === 400) {
+          alert('All fields are required.');
+        } else {
+          alert('An error occurred. Please try again.');
         }
-    };
+      } else {
+        console.error('Error:', error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-200 to-orange-100 p-6">
-            <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-                <h1 className="text-4xl font-extrabold text-center mb-6 text-pink-600">Log In</h1>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-200 to-orange-100 p-6">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
+        <h1 className="text-4xl font-extrabold text-center mb-6 text-pink-600">Log In</h1>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {error && <div className="text-red-600 text-center">{error}</div>}
-                    <div>
-                        <label htmlFor="email" className="block text-left font-medium text-gray-700">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            placeholder="Email Address"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            required
-                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
-                        />
-                    </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <label htmlFor="identifier" className="block text-left font-medium text-gray-700">
+              Email or Mobile Number
+            </label>
+            <input
+              type="text"
+              id="identifier"
+              placeholder="Enter Email or Mobile Number"
+              {...register('identifier')}
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
+            />
+            {errors.identifier && (
+              <p className="text-red-500 text-sm mt-1">{errors.identifier.message}</p>
+            )}
+          </div>
 
-                    <div>
-                        <label htmlFor="password" className="block text-left font-medium text-gray-700">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            placeholder="Enter Password"
-                            value={formData.password}
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            required
-                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
-                        />
-                    </div>
+          <div>
+            <label htmlFor="password" className="block text-left font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter Password"
+              {...register('password')}
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            )}
+          </div>
 
-                    <button
-                        type="submit"
-                        className={`w-full p-3 rounded-lg text-white font-bold transition-all ${loading ? 'bg-gray-400' : 'bg-pink-500 hover:bg-pink-600'}`}
-                        disabled={loading}
-                    >
-                        {loading ? 'Logging in...' : 'Login'}
-                    </button>
+          <button
+            type="submit"
+            className={`w-full p-3 rounded-lg text-white font-bold transition-all ${
+              isSubmitting || loading ? 'bg-gray-400' : 'bg-pink-500 hover:bg-pink-600'
+            }`}
+            disabled={isSubmitting || loading}
+          >
+            {isSubmitting || loading ? 'Logging in...' : 'Login'}
+          </button>
 
-                    <p className="text-center mt-4 text-gray-600">
-                        Don&apos;t have an account?{' '}
-                        <a href="/signup" className="text-pink-500 font-medium hover:underline">Sign Up</a>
-                    </p>
-                </form>
-            </div>
-        </div>
-    );
+          <p className="text-center mt-4 text-gray-600">
+            Don&apos;t have an account?{' '}
+            <a href="/signup" className="text-pink-500 font-medium hover:underline">
+              Sign Up
+            </a>
+          </p>
+        </form>
+      </div>
+    </div>
+  );
 }
