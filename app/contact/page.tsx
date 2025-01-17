@@ -35,7 +35,7 @@ export default function Contact() {
           >
             <h2 className="text-2xl font-semibold">{member.name}</h2>
             {/* <p className="text-gray-500">{member.role}</p> */}
-            <p className="mt-2">📞 +91 {member.phone}</p>
+            <Link href={`tel:+91${member.phone}`} className="mt-2">📞 +91 {member.phone}</Link>
             <Link
               href={`https://api.whatsapp.com/send/?phone=${member.phone}&amp;text&amp;type=phone_number&amp;app`}
               target="_blank"
@@ -101,7 +101,7 @@ export default function Contact() {
                 agarwalkrish29@gmail.com
               </Link>
             </div>
-            <div>
+            {/* <div>
               <strong>Phone:</strong>{" "}
               <Link
                 href="tel:+916289816597"
@@ -109,7 +109,7 @@ export default function Contact() {
               >
                 +91 6289816597
               </Link>
-            </div>
+            </div> */}
             <div>
               <strong>WhatsApp:</strong>{" "}
               <Link

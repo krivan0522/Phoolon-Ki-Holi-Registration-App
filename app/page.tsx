@@ -15,7 +15,7 @@ export default function Home() {
 
         <div className="flex justify-center mb-8">
           <Image
-            src="/hero.jpg"
+            src="/phoolon-holi-hero.jpg"
             alt="Phoolon ki Holi"
             width={500}
             height={300}
@@ -37,7 +37,7 @@ export default function Home() {
         </Link>
         <Link href="/donation">
           <button className="w-full text-lg px-8 py-4 bg-gradient-to-r from-pink-400 to-pink-800 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
-            Donate Now
+            Contribute Now
           </button>
         </Link>
         </div>

@@ -92,7 +92,7 @@ const Navbar = () => {
                         </li>
                         <li className="my-2">
                             <Link href="/donation" className={getLinkClasses("/donation")}>
-                                Donate
+                                Contribute
                             </Link>
                         </li>
                         <li className="my-2">
