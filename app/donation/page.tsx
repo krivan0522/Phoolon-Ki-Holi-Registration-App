@@ -1,8 +1,16 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Image from 'next/image'
-import axios from 'axios'
+import { useState } from 'react';
+import Image from 'next/image';
+import axios from 'axios';
+import { z } from 'zod';
+
+const donationSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters long'),
+  amount: z.number().min(1, 'Amount must be greater than 0'),
+  contact: z.string().regex(/^\d{10}$/, 'Contact number must be 10 digits'),
+  screenshot: z.instanceof(File),
+});
 
 export default function Donation() {
   const [formData, setFormData] = useState({
@@ -10,56 +18,72 @@ export default function Donation() {
     amount: '',
     contact: '',
     screenshot: null as File | null,
-  })
+  });
 
-  const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target
+    const { name, value, files } = e.target;
     if (name === 'screenshot' && files) {
-      setFormData(prevState => ({ ...prevState, [name]: files[0] }))
+      setFormData((prevState) => ({ ...prevState, [name]: files[0] }));
     } else {
-      setFormData(prevState => ({ ...prevState, [name]: value }))
+      setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    
-    const formDataToSend = new FormData()
-    formDataToSend.append('name', formData.name)
-    formDataToSend.append('amount', formData.amount)
-    formDataToSend.append('contact', formData.contact)
-    if (formData.screenshot) {
-      formDataToSend.append('screenshot', formData.screenshot)
-    }
+    e.preventDefault();
+    setErrors({});
+    setLoading(true);
 
+    // Validation
     try {
+      const validatedData = donationSchema.parse({
+        name: formData.name,
+        amount: parseFloat(formData.amount || '0'),
+        contact: formData.contact,
+        screenshot: formData.screenshot,
+      });
+
+      // Prepare FormData for submission
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', validatedData.name);
+      formDataToSend.append('amount', String(validatedData.amount));
+      formDataToSend.append('contact', validatedData.contact);
+      if (validatedData.screenshot) {
+        formDataToSend.append('screenshot', validatedData.screenshot);
+      }
+
+      // API Call
       const response = await axios.post('/api/donate', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
       if (response.status === 200) {
-        alert('Donation submitted successfully.')
-        setFormData({
-          name: '',
-          amount: '',
-          contact: '',
-          screenshot: null,
-        })
+        alert('Donation submitted successfully.');
+        setFormData({ name: '', amount: '', contact: '', screenshot: null });
       } else {
-        alert('Donation failed. Please try again.')
+        alert('Donation failed. Please try again.');
       }
     } catch (error) {
-      console.error('Error:', error)
-      alert('An error occurred. Please try again.')
+      if (error instanceof z.ZodError) {
+        // Validation Errors
+        const validationErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            validationErrors[err.path[0] as string] = err.message;
+          }
+        });
+        setErrors(validationErrors);
+      } else {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 to-yellow-300 p-6">
@@ -67,12 +91,12 @@ export default function Donation() {
         <h1 className="text-4xl font-extrabold text-center text-pink-600 mb-1">
           Donate to Phoolon ki Holi
         </h1>
-        <p className='text-xl text-gray-700 mb-8 text-center'>
-          Aapki udarta, Krishna ke ashirwad ka madhur svaroop hai !
+        <p className="text-xl text-gray-700 mb-8 text-center">
+          Aapki udarta, Krishna ke ashirwad ka madhur svaroop hai!
         </p>
         <div>
           <h2>How to Donate?</h2>
-          <ol className='list-decimal list-inside mb-4'>
+          <ol className="list-decimal list-inside mb-4">
             <li>Scan the QR code below to donate any amount you wish.</li>
             <li>Enter your details in the form below.</li>
             <li>Upload the payment screenshot from the UPI app.</li>
@@ -115,10 +139,10 @@ export default function Donation() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                required
                 className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                 disabled={loading}
               />
+              {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
 
             {/* Amount */}
@@ -132,10 +156,10 @@ export default function Donation() {
                 name="amount"
                 value={formData.amount}
                 onChange={handleChange}
-                required
                 className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                 disabled={loading}
               />
+              {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount}</p>}
             </div>
           </div>
 
@@ -150,10 +174,10 @@ export default function Donation() {
               name="contact"
               value={formData.contact}
               onChange={handleChange}
-              required
               className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
               disabled={loading}
             />
+            {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact}</p>}
           </div>
 
           {/* Screenshot Upload */}
@@ -167,19 +191,19 @@ export default function Donation() {
               name="screenshot"
               accept="image/*"
               onChange={handleChange}
-              required
               className="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
               disabled={loading}
             />
+            {errors.screenshot && (
+              <p className="text-red-500 text-sm mt-1">{errors.screenshot}</p>
+            )}
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
             className={`w-full p-3 text-white rounded-lg transition ${
-              loading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-pink-600 hover:bg-pink-700'
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-pink-600 hover:bg-pink-700'
             }`}
             disabled={loading}
           >
@@ -188,5 +212,5 @@ export default function Donation() {
         </form>
       </div>
     </div>
-  )
+  );
 }
