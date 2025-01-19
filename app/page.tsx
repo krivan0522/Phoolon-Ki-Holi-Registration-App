@@ -15,7 +15,7 @@ export default function Home() {
 
         <div className="flex justify-center mb-8">
           <Image
-            src="/phoolon-holi-hero.jpg"
+            src="/hero.jpg"
             alt="Phoolon ki Holi"
             width={500}
             height={300}
