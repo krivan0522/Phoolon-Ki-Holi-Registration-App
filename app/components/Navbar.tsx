@@ -20,8 +20,8 @@ const Navbar = () => {
     }, [pathname]);
     const getLinkClasses = (path: string): string =>
         pathname === path
-            ? "text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-lg px-4 py-2"
-            : "text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-500 rounded-lg px-4 py-2 transition-all duration-300";
+            ? "text-[#000000b3] bg-gradient-to-r from-pink-500 to-orange-500 rounded-lg px-4 py-2"
+            : "text-gray-200 hover:text-[#000000b3] hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-500 rounded-lg px-4 py-2 transition-all duration-300";
 
     return (
         <nav className="border-b-4 border-pink-500 bg-gradient-to-r from-purple-600 to-blue-500 shadow-lg w-full">
@@ -81,8 +81,8 @@ const Navbar = () => {
                             </Link>
                         </li>
                         <li className="my-2">
-                            <Link href="/about" className={getLinkClasses("/about")}>
-                                About
+                            <Link href="/gallery" className={getLinkClasses("/gallery")}>
+                                Gallery
                             </Link>
                         </li>
                         <li className="my-2">

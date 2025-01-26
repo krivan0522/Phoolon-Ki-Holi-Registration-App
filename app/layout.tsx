@@ -4,7 +4,6 @@ import { AuthProvider } from '@/providers/AuthContext'
 import { RegistrationProvider } from '@/providers/RegistrationContext'
 import DonateBtn from './components/DonateBtn'
 
-
 export const metadata = {
   title: 'Phoolon ki Holi',
   description: 'Annual Phoolon ki Holi event in our locality',

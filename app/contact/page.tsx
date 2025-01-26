@@ -64,7 +64,12 @@ export default function Contact() {
             height="100%" 
             allowFullScreen
             loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade">
+            referrerPolicy="no-referrer-when-downgrade"
+            name="Event Location"
+            title="Event Location"
+            aria-labelledby="Event Location"
+            role="application"
+            aria-label="Event Location">
           </iframe>
         </div>
       </div>

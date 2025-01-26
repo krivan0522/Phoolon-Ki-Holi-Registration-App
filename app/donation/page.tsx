@@ -117,7 +117,7 @@ export default function Donation() {
           </h2>
           <div className="flex justify-center">
             <Image
-              src="/qrcode.svg"
+              src="/qr.jpg"
               alt="UPI QR Code"
               width={250}
               height={250}
