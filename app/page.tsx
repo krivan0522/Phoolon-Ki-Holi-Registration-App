@@ -1,5 +1,26 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { FaMapMarkerAlt, FaCalendarAlt, FaClock } from 'react-icons/fa'
+
+function EventDetails() {
+  return (
+    <div className="my-8 p-6 bg-gradient-to-r from-pink-100 to-yellow-100 rounded-lg shadow-md">
+      <h2 className="text-3xl font-bold text-pink-600 mb-4">Event Details</h2>
+      <div className="flex items-center mb-2">
+        <FaMapMarkerAlt className="text-pink-500 mr-3" />
+        <span className="text-lg text-gray-700">Venue: Chintamani Maidan, Howrah</span>
+      </div>
+      <div className="flex items-center mb-2">
+        <FaCalendarAlt className="text-pink-500 mr-3" />
+        <span className="text-lg text-gray-700">Date: February 23, 2025</span>
+      </div>
+      <div className="flex items-center">
+        <FaClock className="text-pink-500 mr-3" />
+        <span className="text-lg text-gray-700">Time: 4:00 PM - 8:00 PM</span>
+      </div>
+    </div>
+  )
+}
 
 export default function Home() {
   return (
@@ -12,6 +33,7 @@ export default function Home() {
         <p className="text-xl text-gray-700 mb-8 ">
           Bhakti ka rang, Phoolon Ki Holi ke sang!
         </p>
+        <EventDetails />
 
         <div className="flex justify-center mb-8">
           <Image
@@ -29,17 +51,19 @@ export default function Home() {
           Don’t miss the chance to register your Ladoo Gopal for this special event.
         </p>
 
-        <div className='md:space-x-4 flex flex-col md:flex-row space-y-4 md:space-y-0 justify-center'>
-        <Link href="/registration">
-          <button className="text-lg px-8 py-4 w-full bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
-            Register Your Idol
-          </button>
-        </Link>
-        <Link href="/donation">
-          <button className="w-full text-lg px-8 py-4 bg-gradient-to-r from-pink-400 to-pink-800 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
-            Contribute Now
-          </button>
-        </Link>
+        {/* Event Details */}
+
+        <div className='md:space-x-4 flex flex-col md:flex-row space-y-4 md:space-y-0 justify-center mt-8'>
+          <Link href="/registration">
+            <button className="text-lg px-8 py-4 w-full bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
+              Register Your Idol
+            </button>
+          </Link>
+          <Link href="/donation">
+            <button className="w-full text-lg px-8 py-4 bg-gradient-to-r from-pink-400 to-pink-800 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
+              Contribute Now
+            </button>
+          </Link>
         </div>
       </div>
     </div>

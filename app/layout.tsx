@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import { AuthProvider } from '@/providers/AuthContext'
 import { RegistrationProvider } from '@/providers/RegistrationContext'
 import DonateBtn from './components/DonateBtn'
+// import { GoogleTagManager } from '@next/third-parties/google'
 
 export const metadata = {
   title: 'Phoolon ki Holi',

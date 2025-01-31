@@ -40,7 +40,7 @@ const SPRING_OPTIONS = {
     damping: 50,
 };
 
-export const SwipeCarousel = () => {
+const SwipeCarousel = () => {
     const [contentIndex, setContentIndex] = useState(0);
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
     const dragX = useMotionValue(0);
@@ -198,3 +198,5 @@ const GradientEdges = () => {
         </>
     );
 };
+
+export default SwipeCarousel;
