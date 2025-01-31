@@ -199,6 +199,9 @@ function RegistrationForm() {
             Your registration token is:
             <span className="font-bold text-indigo-700"> {token}</span>
           </p>
+          <p className="text-sm text-gray-600 mt-2">
+            Please note this: Ladoo Gopal will only be submitted on 23rd February from 9:00 am till 11:00 am.
+          </p>
         </div>
       ) : (
         isRegistrationOpen && (
