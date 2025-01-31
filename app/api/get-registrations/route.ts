@@ -24,7 +24,9 @@ export async function GET() {
       return NextResponse.json({ message: 'No registrations found' });
     }
 
-    return NextResponse.json({ registrations });
+    return NextResponse.json({ registrations },{
+      headers: { 'Access-Control-Allow-Origin': '*' }
+    });
   } catch (error) {
     console.error('Error fetching registrations:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

@@ -15,7 +15,9 @@ export async function GET() {
       return NextResponse.json({ message: 'No donations found' });
     }
 
-    return NextResponse.json({ donations });
+    return NextResponse.json({ donations },{
+      headers: { 'Access-Control-Allow-Origin': '*' }
+    });
 
   } catch(error) {
     console.error('Error fetching donations:', error);
