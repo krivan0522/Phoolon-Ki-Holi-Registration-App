@@ -15,7 +15,7 @@ const registrationSchema = z.object({
   idolSize: z.string().nonempty('Ladoo Gopal size is required'),
 });
 
-const REGISTRATION_START_DATE = new Date('2025-02-01T08:00:00'); // Change to your desired start date
+const REGISTRATION_START_DATE = new Date('2025-02-02T08:00:00'); // Change to your desired start date
 
 
 function RegistrationForm() {
