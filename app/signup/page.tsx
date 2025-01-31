@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Invalid email address').optional().or(z.literal('')),
   mobile: z
     .string()
     .regex(/^\d{10}$/, 'Mobile number must be 10 digits'),
@@ -36,7 +36,7 @@ export default function Signup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({}); // Reset errors before validation
+    setErrors({});
 
     const validationResult = signupSchema.safeParse(formData);
 
@@ -97,16 +97,15 @@ export default function Signup() {
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
 
-          {/* Email Field */}
+          {/* Email Field - remove required attribute */}
           <div>
-            <label htmlFor="email" className="block font-medium text-gray-700">Email</label>
+            <label htmlFor="email" className="block font-medium text-gray-700">Email (Optional)</label>
             <input
               type="email"
               id="email"
-              placeholder="Email Address"
+              placeholder="Email Address (Optional)"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}

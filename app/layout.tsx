@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import { AuthProvider } from '@/providers/AuthContext'
 import { RegistrationProvider } from '@/providers/RegistrationContext'
 import DonateBtn from './components/DonateBtn'
+import Script from 'next/script'
 // import { GoogleTagManager } from '@next/third-parties/google'
 
 export const metadata = {
@@ -22,6 +23,17 @@ export default function RootLayout({
 }) {
   return (  
     <html lang="en">
+      <head>
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-35W0R3EJ4Z"></Script>
+        <Script id="gtag-init">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-35W0R3EJ4Z');
+          `}
+        </Script>
+      </head>
       <body>
         <AuthProvider>
           <RegistrationProvider>
