@@ -191,8 +191,8 @@ function RegistrationForm() {
         </ol>
       </div>) : ("")}
       {!isLoggedIn && (
-        <p className="text-center text-red-500 mb-4">
-          Please <Link href={'/login'} className="text-blue-500 hover:text-red-950 underline">log in</Link> to view your token/register your idol.
+        <p className="text-center text-yellow-500 mb-4 bg-red-200 p-2 rounded-lg animate-glow hover:animate-none">
+          <Link href={'/login'} className="hover:text-yellow-500 text-red-950 underline">Please <span className='text-blue-700 hover:text-yellow-500'>log in</span> to view your token/register your idol.</Link>
         </p>
       )}
       {isLoggedIn && isRegistered ? (
