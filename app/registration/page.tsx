@@ -196,20 +196,30 @@ function RegistrationForm() {
         </p>
       )}
       {isLoggedIn && isRegistered ? (
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold text-green-600">
-            You are registered!
+        <div className="text-center p-8 rounded-xl">
+          <h2 className="text-3xl font-bold text-green-600 mb-6 animate-fade-in">
+            You are registered! 🎉
           </h2>
-          <p className="text-lg mt-2">
-            Your registration token is:
-            <span className="font-bold text-indigo-700"> {token}</span>
-          </p>
-          <p className="text-base text-gray-600 mt-2">
-            Please note this: Ladoo Gopal will be submitted only on 23rd February,2025 from 9:00 am till 11:30 am.
-          </p>
-            <p className="text-base text-gray-600 mt-2">
-            जरूरी सूचना: लड्डू गोपाल केवल 23 फरवरी, 2025 को सुबह 9:00 बजे से 11:30 बजे तक ही जमा किए जाएंगे।
+          <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+            <p className="text-lg text-gray-700">
+              Your registration token is:
+              <span className="block mt-2 font-mono text-xl font-bold text-indigo-700 bg-indigo-50 p-3 rounded-lg">{token}</span>
             </p>
+          </div>
+          <div className="space-y-4 bg-yellow-50 p-6 rounded-lg">
+            <p className="text-lg text-gray-800 font-medium">
+              Please note this: Ladoo Gopal will be submitted only on
+              <span className="block mt-1 text-pink-600 font-semibold">
+                23rd February, 2025 from 9:00 am till 11:30 am
+              </span>
+            </p>
+            <p className="text-lg text-gray-800 font-medium mt-4">
+              जरूरी सूचना: लड्डू गोपाल केवल
+              <span className="block mt-1 text-pink-600 font-semibold">
+                23 फरवरी, 2025 को सुबह 9:00 बजे से 11:30 बजे तक ही जमा किए जाएंगे।
+              </span>
+            </p>
+          </div>
         </div>
       ) : (
         isRegistrationOpen && (
