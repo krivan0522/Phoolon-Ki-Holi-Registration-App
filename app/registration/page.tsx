@@ -15,7 +15,7 @@ const registrationSchema = z.object({
   idolSize: z.string().nonempty('Ladoo Gopal size is required'),
 });
 
-const REGISTRATION_START_DATE = new Date('2025-02-01T00:00:00'); // Change to your desired start date
+const REGISTRATION_START_DATE = new Date('2025-01-01T00:00:00'); // Change to your desired start date
 
 
 function RegistrationForm() {
@@ -160,7 +160,7 @@ function RegistrationForm() {
           Registration is currently closed. Please check back later.
         </div>
       )}
-      {!isRegistered && isRegistrationOpen && (
+      {!isRegistered && isRegistrationOpen && ((registrationControl?.maxRegistrations || 0) - (registrationControl?.currentRegistrations || 0))<=50 && (
         // Display the available registrations towards the right in a box
         <div className="flex justify-start items-center bg-indigo-100 p-4 rounded-lg mb-4">
           <h2 className="text-lg font-semibold text-black" >
@@ -199,9 +199,12 @@ function RegistrationForm() {
             Your registration token is:
             <span className="font-bold text-indigo-700"> {token}</span>
           </p>
-          <p className="text-sm text-gray-600 mt-2">
-            Please note this: Ladoo Gopal will only be submitted on 23rd February from 9:00 am till 11:00 am.
+          <p className="text-base text-gray-600 mt-2">
+            Please note this: Ladoo Gopal will be submitted only on 23rd February,2025 from 9:00 am till 11:30 am.
           </p>
+            <p className="text-base text-gray-600 mt-2">
+            जरूरी सूचना: लड्डू गोपाल केवल 23 फरवरी, 2025 को सुबह 9:00 बजे से 11:30 बजे तक ही जमा किए जाएंगे।
+            </p>
         </div>
       ) : (
         isRegistrationOpen && (
