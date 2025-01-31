@@ -11,11 +11,11 @@ import * as z from 'zod';
 const registrationSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
   address: z.string().min(10, 'Address must be at least 10 characters long'),
-  idolDescription: z.string().min(5, 'Description must be at least 5 characters long'),
+  idolDescription: z.string(),
   idolSize: z.string().nonempty('Ladoo Gopal size is required'),
 });
 
-const REGISTRATION_START_DATE = new Date('2025-02-02T08:00:00'); // Change to your desired start date
+const REGISTRATION_START_DATE = new Date('2025-01-01T01:00:00'); // Change to your desired start date
 
 
 function RegistrationForm() {
@@ -93,11 +93,16 @@ function RegistrationForm() {
       return;
     }
 
+    const formDataWithDefaults = {
+      ...formData,
+      idolDescription: formData.idolDescription || 'Default description',
+    };
+
     setLoading(true);
 
     try {
       const tkn = localStorage.getItem('authToken');
-      const response = await axios.post('/api/register', formData, {
+      const response = await axios.post('/api/register', formDataWithDefaults, {
         headers: {
           Authorization: `Bearer ${tkn}`,
         },
@@ -219,6 +224,7 @@ function RegistrationForm() {
                   type="text"
                   id="name"
                   name="name"
+                  placeholder='Enter your full name'
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -261,6 +267,7 @@ function RegistrationForm() {
               <textarea
                 id="address"
                 name="address"
+                placeholder='Enter your complete address'
                 value={formData.address}
                 onChange={handleChange}
                 required
@@ -273,14 +280,14 @@ function RegistrationForm() {
             </div>
             <div className="flex flex-col">
               <label htmlFor="idolDescription" className="font-medium mb-1">
-                Ladoo Gopal Description
+                Ladoo Gopal Description (Optional)
               </label>
               <textarea
                 id="idolDescription"
                 name="idolDescription"
+                placeholder="Enter your idol's description"
                 value={formData.idolDescription}
                 onChange={handleChange}
-                required
                 rows={3}
                 className={`p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 ${errors.idolDescription ? 'border-red-500 focus:ring-red-400' : 'focus:ring-indigo-400'
                   }`}
