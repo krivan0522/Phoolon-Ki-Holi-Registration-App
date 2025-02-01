@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { FaMapMarkerAlt, FaCalendarAlt, FaClock } from 'react-icons/fa'
+import { FaMapMarkerAlt, FaCalendarAlt, FaClock, FaWhatsapp } from 'react-icons/fa'
 
 function EventDetails() {
   return (
@@ -64,6 +64,13 @@ export default function Home() {
               Contribute Now
             </button>
           </Link>
+        </div>
+        <div className='flex w-full justify-center mt-4'>
+        <Link href="https://chat.whatsapp.com/CR6XQ3qXIuF9Mz2Hhei0zi" target="_blank">
+          <button className=" text-lg px-8 py-4 bg-gradient-to-r from-green-400 to-green-800 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
+            <FaWhatsapp className='inline text-3xl mr-3'/>Join Group
+          </button>
+        </Link>
         </div>
       </div>
     </div>
