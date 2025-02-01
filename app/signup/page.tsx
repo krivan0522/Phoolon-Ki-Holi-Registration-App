@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
-  email: z.string().email('Invalid email address').optional().or(z.literal('')),
+  email: z.string().email('Invalid email address'),
   mobile: z
     .string()
     .regex(/^\d{10}$/, 'Mobile number must be 10 digits'),
@@ -99,12 +99,13 @@ export default function Signup() {
 
           {/* Email Field - remove required attribute */}
           <div>
-            <label htmlFor="email" className="block font-medium text-gray-700">Email (Optional)</label>
+            <label htmlFor="email" className="block font-medium text-gray-700">Email</label>
             <input
               type="email"
               id="email"
-              placeholder="Email Address (Optional)"
+              placeholder="Email Address "
               value={formData.email}
+              
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
             />
