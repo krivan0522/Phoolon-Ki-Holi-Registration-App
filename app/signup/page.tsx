@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
-  email: z.string().email('Invalid email address'),
+  email: z.string(),
   mobile: z
     .string()
     .regex(/^\d{10}$/, 'Mobile number must be 10 digits'),
@@ -23,7 +23,7 @@ const signupSchema = z.object({
 export default function Signup() {
   const [formData, setFormData] = useState({
     name: '',
-    email: 'example@email.com',
+    email: '',
     mobile: '',
     password: '',
     confirmPassword: '',

@@ -10,17 +10,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
     }
 
-    // Check if email already exists
-    if (email) {
-      const emailInUse = await prisma.user.findUnique({
-        where: { email },
-      });
-      if (emailInUse) {
-        return NextResponse.json(
-          { error: 'Email is already in use.' },
-          { status: 400 }
-        );
-      }
+    // Generate default email if not provided or empty
+    const userEmail = email && email.trim() !== "" ? email : `user${mobile}@example.com`;
+
+    // Check if generated email already exists
+    const emailInUse = await prisma.user.findUnique({
+      where: { email: userEmail },
+    });
+    if (emailInUse) {
+      return NextResponse.json(
+        { error: 'Email is already in use. Try again.' },
+        { status: 400 }
+      );
     }
 
     // Check if mobile already exists
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
 
     // Create new user
     const newUser = await prisma.user.create({
-      data: { name, email, mobile, password: hashedPassword },
+      data: { name, email: userEmail, mobile, password: hashedPassword },
     });
 
     return NextResponse.json({ success: true, user: newUser });

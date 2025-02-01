@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 const loginSchema = z.object({
   identifier: z
     .string()
-    .nonempty('Email or Mobile Number is required.')
+    .nonempty('Mobile Number is required.')
     .refine(
       (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{10}$/.test(value),
       { message: 'Must be a valid email or 10-digit mobile number.' }
