@@ -23,7 +23,7 @@ const signupSchema = z.object({
 export default function Signup() {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    email: 'example@email.com',
     mobile: '',
     password: '',
     confirmPassword: '',
@@ -98,7 +98,7 @@ export default function Signup() {
           </div>
 
           {/* Email Field - remove required attribute */}
-          <div>
+          {/* <div>
             <label htmlFor="email" className="block font-medium text-gray-700">Email</label>
             <input
               type="email"
@@ -110,7 +110,7 @@ export default function Signup() {
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-          </div>
+          </div> */}
 
           {/* Mobile Field */}
           <div>
