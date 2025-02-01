@@ -77,7 +77,7 @@ export default function Login() {
             <input
               type="text"
               id="identifier"
-              placeholder="Enter Email or Mobile Number"
+              placeholder="Enter Mobile Number"
               {...register('identifier')}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
             />
