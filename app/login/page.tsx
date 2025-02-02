@@ -72,7 +72,7 @@ export default function Login() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="identifier" className="block text-left font-medium text-gray-700">
-              Email or Mobile Number
+              Mobile Number
             </label>
             <input
               type="text"
