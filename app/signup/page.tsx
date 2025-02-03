@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { z } from 'zod';
 
 const signupSchema = z.object({
@@ -67,7 +68,7 @@ export default function Signup() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
-        setErrors({ email: 'Email or mobile number already in use' });
+        setErrors({ mobile: 'Mobile number already in use' });
       } else {
         setErrors({ general: 'An error occurred. Please try again.' });
       }
@@ -145,9 +146,9 @@ export default function Signup() {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-3 text-gray-500 hover:text-pink-500"
+                className="absolute right-4 top-4 text-gray-500 hover:text-pink-500"
               >
-                {showPassword ? 'Hide' : 'Show'}
+                {showPassword ? <FaEye/> : <FaEyeSlash/>}
               </button>
             </div>
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
@@ -169,9 +170,9 @@ export default function Signup() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
-                className="absolute right-3 top-3 text-gray-500 hover:text-pink-500"
+                className="absolute right-4 top-4 text-gray-500 hover:text-pink-500"
               >
-                {showConfirmPassword ? 'Hide' : 'Show'}
+                {showConfirmPassword ? <FaEye/> : <FaEyeSlash/>}
               </button>
             </div>
             {errors.confirmPassword && (

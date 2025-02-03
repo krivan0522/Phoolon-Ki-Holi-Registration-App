@@ -124,6 +124,8 @@ export default function Donation() {
               className="rounded-lg shadow-md"
             />
           </div>
+          <h2 className="text-lg text-center font-semibold mt-4 text-gray-700">Or Pay on this UPI ID</h2>
+          <p className="text-xl text-center text-pink-600 font-semibold">agarwalkrish29@oksbi</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

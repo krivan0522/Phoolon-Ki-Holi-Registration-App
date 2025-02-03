@@ -6,6 +6,7 @@ import { useAuth } from '@/providers/AuthContext';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 // Validation schema
 const loginSchema = z.object({
@@ -23,6 +24,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { setIsLoggedIn } = useAuth();
   const router = useRouter();
   const {
@@ -46,7 +48,7 @@ export default function Login() {
       } else {
         alert(result.error || 'Invalid credentials.');
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response) {
         if (error.response.status === 401) {
@@ -90,13 +92,22 @@ export default function Login() {
             <label htmlFor="password" className="block text-left font-medium text-gray-700">
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter Password"
-              {...register('password')}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="Enter Password"
+                {...register('password')}
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-4 top-4 text-gray-500 hover:text-pink-500"
+              >
+                {showPassword ? <FaEye/> : <FaEyeSlash/>}
+              </button>
+            </div>
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
             )}
@@ -104,9 +115,8 @@ export default function Login() {
 
           <button
             type="submit"
-            className={`w-full p-3 rounded-lg text-white font-bold transition-all ${
-              isSubmitting || loading ? 'bg-gray-400' : 'bg-pink-500 hover:bg-pink-600'
-            }`}
+            className={`w-full p-3 rounded-lg text-white font-bold transition-all ${isSubmitting || loading ? 'bg-gray-400' : 'bg-pink-500 hover:bg-pink-600'
+              }`}
             disabled={isSubmitting || loading}
           >
             {isSubmitting || loading ? 'Logging in...' : 'Login'}
