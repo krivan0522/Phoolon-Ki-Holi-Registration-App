@@ -165,14 +165,14 @@ function RegistrationForm() {
           Registration is currently closed. Please check back later.
         </div>
       )}
-      {!isRegistered && isRegistrationOpen && ((registrationControl?.maxRegistrations || 0) - (registrationControl?.currentRegistrations || 0))<=50 && (
+      {/* {!isRegistered && isRegistrationOpen && ((registrationControl?.maxRegistrations || 0) - (registrationControl?.currentRegistrations || 0))<=50 && (
         // Display the available registrations towards the right in a box
         <div className="flex justify-start items-center bg-indigo-100 p-4 rounded-lg mb-4">
           <h2 className="text-lg font-semibold text-black" >
             {(registrationControl?.maxRegistrations || 0) - (registrationControl?.currentRegistrations || 0)} registrations are left only. Hurry up!
           </h2>
         </div>
-      )}
+      )} */}
       {isRegistrationOpen && !isRegistered ? (<div>
         {/* Registration Instructions in English*/}
         <h2 className={`text-lg text-black`}>How to register your idol?</h2>

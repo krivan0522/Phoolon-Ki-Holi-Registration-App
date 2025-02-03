@@ -25,6 +25,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
   const { setIsLoggedIn } = useAuth();
   const router = useRouter();
   const {
@@ -46,17 +47,17 @@ export default function Login() {
         setIsLoggedIn(true);
         router.push('/registration'); // Redirect to registration
       } else {
-        alert(result.error || 'Invalid credentials.');
+        setError(result.error || 'Invalid credentials.');
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response) {
         if (error.response.status === 401) {
-          alert('Invalid email or password.');
+          setError('Incorrect password.');
         } else if (error.response.status === 400) {
-          alert('All fields are required.');
+          setError('User not found. Please sign up to create an account.');
         } else {
-          alert('An error occurred. Please try again.');
+          setError('An error occurred. Please try again.');
         }
       } else {
         console.error('Error:', error);
@@ -70,7 +71,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-200 to-orange-100 p-6">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
         <h1 className="text-4xl font-extrabold text-center mb-6 text-pink-600">Log In</h1>
-
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="identifier" className="block text-left font-medium text-gray-700">
