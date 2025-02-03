@@ -261,9 +261,9 @@ function RegistrationForm() {
                   }
                 >
                   <option value="">Select Size</option>
-                  {Array.from({ length: 15 }, (_, i) => (
-                    <option key={i} value={`${i + 1}`}>
-                      {i + 1}
+                  {Array.from({ length: 17 }, (_, i) => (
+                    <option key={i} value={`${i }`}>
+                      {i }
                     </option>
                   ))}
                 </select>
