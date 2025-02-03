@@ -74,7 +74,7 @@ const Navbar = () => {
 
                 {/* Desktop Navigation Links */}
                 <div className={`w-full lg:flex lg:items-center lg:w-auto ${menuOpen ? "block" : "hidden"}`}>
-                    <ul className="flex flex-col items-center font-medium mt-4 lg:flex-row lg:space-x-6 lg:mt-0" onClick={() => setMenuOpen(!menuOpen)}>
+                    <ul className="flex flex-col items-center font-medium mt-4 lg:flex-row lg:space-x-5 lg:mt-0" onClick={() => setMenuOpen(!menuOpen)}>
                         <li className="my-2">
                             <Link href="/" className={getLinkClasses("/")} >
                                 Home
@@ -98,6 +98,11 @@ const Navbar = () => {
                         <li className="my-2">
                             <Link href="/contact" className={getLinkClasses("/contact")}>
                                 Contact
+                            </Link>
+                        </li>
+                        <li className="my-2">
+                            <Link href="/suggestions" className={getLinkClasses("/suggestions")}>
+                                Suggestions
                             </Link>
                         </li>
                         {isLogin ? (
