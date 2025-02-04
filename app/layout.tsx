@@ -4,6 +4,7 @@ import { AuthProvider } from '@/providers/AuthContext'
 import { RegistrationProvider } from '@/providers/RegistrationContext'
 import DonateBtn from './components/DonateBtn'
 import Script from 'next/script'
+import { Toaster } from 'react-hot-toast'
 // import { GoogleTagManager } from '@next/third-parties/google'
 
 export const metadata = {
@@ -35,6 +36,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
+        <Toaster position="bottom-right" reverseOrder={false}/>
         <AuthProvider>
           <RegistrationProvider>
           <Navbar />

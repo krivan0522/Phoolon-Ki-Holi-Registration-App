@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { z } from 'zod';
+import { toast } from 'react-hot-toast';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
@@ -61,15 +62,18 @@ export default function Signup() {
 
       if (result.success) {
         setFormData({ name: '', email: '', mobile: '', password: '', confirmPassword: '' });
+        toast.success('Account created successfully. Please log in.');
         router.push('/login');
       } else {
-        alert(result.error || 'Something went wrong.');
+        toast.error(result.error || 'Something went wrong.');
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         setErrors({ mobile: 'Mobile number already in use' });
+        toast.error('Mobile number already in use');
       } else {
+        toast.error('An error occurred. Please try again.');
         setErrors({ general: 'An error occurred. Please try again.' });
       }
     } finally {

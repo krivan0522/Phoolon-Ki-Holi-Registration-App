@@ -5,6 +5,7 @@ import { useRegistration } from '@/providers/RegistrationContext';
 import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import * as z from 'zod';
 
 // Define Zod schema for validation
@@ -116,12 +117,13 @@ function RegistrationForm() {
           idolDescription: '',
           idolSize: '',
         });
+        toast.success('Registration successful. Please check your registration token.');
       } else {
-        alert('Registration failed. Please try again.');
+        toast.error('Registration failed. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred. Please try again.');
+      toast.error('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }

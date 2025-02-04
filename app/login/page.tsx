@@ -7,6 +7,7 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import {toast} from 'react-hot-toast';
 
 // Validation schema
 const loginSchema = z.object({
@@ -45,8 +46,10 @@ export default function Login() {
       if (result.success) {
         localStorage.setItem('authToken', result.token); // Save token
         setIsLoggedIn(true);
+        toast.success('Logged in successfully.');
         router.push('/registration'); // Redirect to registration
       } else {
+        toast.error(result.error || 'Invalid credentials.');
         setError(result.error || 'Invalid credentials.');
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,10 +57,13 @@ export default function Login() {
       if (error.response) {
         if (error.response.status === 401) {
           setError('Incorrect password.');
+          toast.error('Incorrect password.');
         } else if (error.response.status === 400) {
           setError('User not found. Please sign up to create an account.');
+          toast.error('User not found. Please sign up to create an account.');
         } else {
           setError('An error occurred. Please try again.');
+          toast.error('An error occurred. Please try again.');
         }
       } else {
         console.error('Error:', error);

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import { z } from 'zod';
+import toast from 'react-hot-toast';
 
 const donationSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
@@ -61,10 +62,10 @@ export default function Donation() {
       });
 
       if (response.status === 200) {
-        alert('Donation submitted successfully.');
+        toast.success('Donation submitted successfully.');
         setFormData({ name: '', amount: '', contact: '', screenshot: null });
       } else {
-        alert('Donation failed. Please try again.');
+        toast.error('Donation failed. Please try again.');
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -78,7 +79,7 @@ export default function Donation() {
         setErrors(validationErrors);
       } else {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        toast.error('An error occurred. Please try again.');
       }
     } finally {
       setLoading(false);
