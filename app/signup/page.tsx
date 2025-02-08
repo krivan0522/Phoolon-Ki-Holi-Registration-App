@@ -2,10 +2,11 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '@/providers/AuthContext';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
@@ -30,11 +31,19 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
   });
+  
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+        router.push("/registration");
+    }
+  }, [isLoggedIn, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,18 +76,23 @@ export default function Signup() {
       // Step 2: Show success toast (User sees only this)
       toast.success('Account created successfully!');
   
+      await new Promise((resolve) => setTimeout(resolve, 500)); // 0.5-second delay
+      
+      const loginform={
+        identifier:formData.mobile,
+        password:formData.password
+      }
       // Step 3: Attempt Login Silently
       try {
-        const loginRes = await axios.post('/api/auth/login', {
-          mobile: formData.mobile,
-          password: formData.password,
-        });
+        const loginRes = await axios.post('/api/auth/login', loginform);
   
         const loginData = loginRes.data;
   
         if (loginData.success) {
           localStorage.setItem('authToken', loginData.token);
-          router.push('/dashboard'); // Redirect to dashboard
+          setIsLoggedIn(true);
+          toast.success('Logged in successfully.');
+          router.push('/registration');
         } else {
           throw new Error('Login failed'); // Force redirect to login silently
         }
