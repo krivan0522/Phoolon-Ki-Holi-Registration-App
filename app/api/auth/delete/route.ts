@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
+import Cors from 'next-cors';
 
 export async function DELETE(request: Request) {
   try {
+    // Enable CORS
+    await Cors(request,{
+            methods: ['DELETE', 'OPTIONS'],
+            origin: '*', 
+            allowedHeaders: ['Content-Type', 'Authorization'],
+          });
     const { mobile, apiKey } = await request.json();
 
     // Check API key for admin authentication
