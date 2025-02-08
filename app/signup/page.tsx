@@ -39,11 +39,9 @@ export default function Signup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
-
+  
     const validationResult = signupSchema.safeParse(formData);
-
     if (!validationResult.success) {
-      // Extract validation errors and set them in the state
       const validationErrors: Record<string, string> = {};
       validationResult.error.errors.forEach((err) => {
         if (err.path[0]) {
@@ -53,33 +51,48 @@ export default function Signup() {
       setErrors(validationErrors);
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      const response = await axios.post('/api/auth/signup', formData);
-      const result = response.data;
-
-      if (result.success) {
-        setFormData({ name: '', email: '', mobile: '', password: '', confirmPassword: '' });
-        toast.success('Account created successfully. Please log in.');
-        router.push('/login');
-      } else {
-        toast.error(result.error || 'Something went wrong.');
+      // Step 1: Call Signup API
+      const signupRes = await axios.post('/api/auth/signup', formData);
+      const signupData = signupRes.data;
+  
+      if (!signupData.success) {
+        toast.error(signupData.error || 'Signup failed.');
+        return;
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      if (error.response && error.response.status === 400) {
-        setErrors({ mobile: 'Mobile number already in use' });
-        toast.error('Mobile number already in use');
-      } else {
-        toast.error('An error occurred. Please try again.');
-        setErrors({ general: 'An error occurred. Please try again.' });
+  
+      // Step 2: Show success toast (User sees only this)
+      toast.success('Account created successfully!');
+  
+      // Step 3: Attempt Login Silently
+      try {
+        const loginRes = await axios.post('/api/auth/login', {
+          mobile: formData.mobile,
+          password: formData.password,
+        });
+  
+        const loginData = loginRes.data;
+  
+        if (loginData.success) {
+          localStorage.setItem('authToken', loginData.token);
+          router.push('/dashboard'); // Redirect to dashboard
+        } else {
+          throw new Error('Login failed'); // Force redirect to login silently
+        }
+      } catch {
+        router.push('/login'); // Silent redirect if login fails
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 to-orange-100 p-6">
