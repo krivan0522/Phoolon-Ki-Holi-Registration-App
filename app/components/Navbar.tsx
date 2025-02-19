@@ -14,6 +14,7 @@ const Navbar = () => {
     const handleLogout = () => {
         localStorage.removeItem("authToken");
         setIsLoggedIn(false);
+        window.location.reload();
     };
     useEffect(() => {
         setIsLogin(pathname === "/login");

@@ -162,11 +162,7 @@ function RegistrationForm() {
       <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">
         Ladoo Gopal Registration
       </h1>
-      {!isRegistered && !isRegistrationOpen && (
-        <div className="text-center text-red-600">
-          Registration is currently closed. Please check back later.
-        </div>
-      )}
+      
       {/* {!isRegistered && isRegistrationOpen && ((registrationControl?.maxRegistrations || 0) - (registrationControl?.currentRegistrations || 0))<=50 && (
         // Display the available registrations towards the right in a box
         <div className="flex justify-start items-center bg-indigo-100 p-4 rounded-lg mb-4">
@@ -194,8 +190,36 @@ function RegistrationForm() {
       </div>) : ("")}
       {!isLoggedIn && (
         <p className="text-center text-yellow-500 mb-4 bg-red-200 p-2 rounded-lg animate-glow hover:animate-none">
-          <Link href={'/login'} className="hover:text-yellow-500 text-red-950 underline">Please <span className='text-blue-700 hover:text-yellow-500'>log in</span> to view your token/register your idol.</Link>
+          <Link href={'/login'} className="hover:text-yellow-500 text-red-950 underline">Please <span className='text-blue-700 hover:text-yellow-500'>log in</span> to view your token.</Link>
         </p>
+      )}
+      {!isRegistered && !isRegistrationOpen && (
+        // <div className="text-center text-red-600">
+        //   Registration is currently closed. Please check back later.
+        // </div>
+        <div className="w-full max-w-3xl rounded-2xl p-8 text-center flex flex-col items-center">
+          <h1 className="text-3xl font-extrabold text-red-600 mb-2">🚫 Registration is Closed!</h1>
+          <p className="text-lg text-gray-700 mb-6">
+            Thank you for your interest! Unfortunately, registrations for the laddoo gopal have been ended.
+          </p>
+
+          <div className="bg-green-100 p-4 rounded-lg w-full max-w-md mb-6">
+            <h2 className="text-xl font-bold text-green-700">For Registered Participants 🎉</h2>
+            <p className="text-gray-900">
+              📅 <strong>Date:</strong> <span className="text-green-700">23rd February</span><br />
+              ⏰ <strong>Time:</strong> <span className="text-green-700">9:00 AM - 11:30 PM</span><br />
+              📍 <strong>Location:</strong> <span className="text-green-700">Chintamani Maidan, Howrah</span><br />
+              Please <strong>bring your Ladoo Gopal for submission</strong> along with the <strong>registration token</strong> displayed on your mobile phone.
+            </p>
+          </div>
+
+          <div className="bg-blue-100 p-4 rounded-lg w-full max-w-md">
+            <h2 className="text-xl font-bold text-blue-700">For Visitors & Devotees 🙏</h2>
+            <p className="text-gray-900">
+              Even if you haven&apos;t registered, you are <strong>warmly invited</strong> to join the event, seek blessings, and enjoy the spiritual celebrations.
+            </p>
+          </div>
+        </div>
       )}
       {isLoggedIn && isRegistered ? (
         <div className="text-center p-8 rounded-xl">
